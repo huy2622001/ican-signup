@@ -1,24 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
+import {Routes, Route} from 'react-router-dom'
+
+import IcanSignup from './Components/IcanSignup/IcanSignup';
+import IcanSignin from './Components/IcanSignin/IcanSignin';
+import IcanOtp from './Components/IcanOtp/IcanOtp'
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path='/' element={<IcanSignup/>} />
+      <Route path='/Otp' element={<IcanOtp/>} />
+      <Route path='/Signin' element={<IcanSignin/>} />      
+    </Routes>
   );
 }
 
