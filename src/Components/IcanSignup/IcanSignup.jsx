@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../authContext/authContext'
 
 import './IcanSignup.css'
 
@@ -14,6 +15,8 @@ const IcanSignup = () => {
 
   const navigate = useNavigate();
 
+  const { setAuthData } = useContext(AuthContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phonenumber, setPhoneNumber] = useState('');
@@ -22,28 +25,32 @@ const IcanSignup = () => {
   const [dateofbirth, setDateofBirth] = useState('');
   const [response, setResponse] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSignup = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/sign-up', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: 'example', password: 'password' }),
+      });
 
-    fetch('http://localhost:3001/sign-up', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password, phonenumber, country, gender, dateofbirth }),
-    })
-      .then(response => response.text())
-      .then(data => {
-        setResponse(data);
+      if (response.ok) {
+        const data = await response.json();
+        setAuthData(data);
         navigate('/Otp');
-      })
-      .catch(error => console.error('Error:', error));
+      } else {
+        console.error('Signup failed:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+    }
   };
 
 
   return (
     <div className='container'>
-      <form className='header' onSubmit={handleSubmit}>
+      <form className='header'>
         <div className='int1'>
           <img src={yellow_splash} alt="" className='splash' />
         </div>
@@ -67,7 +74,7 @@ const IcanSignup = () => {
               <option value="BW" label="Botswana">Botswana</option>
               <option value="BF" label="Burkina Faso">Burkina Faso</option>
               <option value="BI" label="Burundi">Burundi</option>
-<option value="CM" label="Cameroon">Cameroon</option>
+              <option value="CM" label="Cameroon">Cameroon</option>
               <option value="CV" label="Cape Verde">Cape Verde</option>
               <option value="CF" label="Central African Republic">Central African Republic</option>
               <option value="TD" label="Chad">Chad</option>
@@ -110,7 +117,7 @@ const IcanSignup = () => {
               <option value="ZA" label="South Africa">South Africa</option>
               <option value="SD" label="Sudan">Sudan</option>
               <option value="SZ" label="Swaziland">Swaziland</option>
-<option value="ST" label="São Tomé and Príncipe">São Tomé and Príncipe</option>
+              <option value="ST" label="São Tomé and Príncipe">São Tomé and Príncipe</option>
               <option value="TZ" label="Tanzania">Tanzania</option>
               <option value="TG" label="Togo">Togo</option>
               <option value="TN" label="Tunisia">Tunisia</option>
@@ -153,7 +160,7 @@ const IcanSignup = () => {
               <option value="JM" label="Jamaica">Jamaica</option>
               <option value="MQ" label="Martinique">Martinique</option>
               <option value="MX" label="Mexico">Mexico</option>
-<option value="MS" label="Montserrat">Montserrat</option>
+              <option value="MS" label="Montserrat">Montserrat</option>
               <option value="AN" label="Netherlands Antilles">Netherlands Antilles</option>
               <option value="NI" label="Nicaragua">Nicaragua</option>
               <option value="PA" label="Panama">Panama</option>
@@ -194,7 +201,7 @@ const IcanSignup = () => {
               <option value="JP" label="Japan">Japan</option>
               <option value="JO" label="Jordan">Jordan</option>
               <option value="KZ" label="Kazakhstan">Kazakhstan</option>
-<option value="KW" label="Kuwait">Kuwait</option>
+              <option value="KW" label="Kuwait">Kuwait</option>
               <option value="KG" label="Kyrgyzstan">Kyrgyzstan</option>
               <option value="LA" label="Laos">Laos</option>
               <option value="LB" label="Lebanon">Lebanon</option>
@@ -236,7 +243,7 @@ const IcanSignup = () => {
               <option value="BE" label="Belgium">Belgium</option>
               <option value="BA" label="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
               <option value="BG" label="Bulgaria">Bulgaria</option>
-<option value="HR" label="Croatia">Croatia</option>
+              <option value="HR" label="Croatia">Croatia</option>
               <option value="CY" label="Cyprus">Cyprus</option>
               <option value="CZ" label="Czech Republic">Czech Republic</option>
               <option value="DK" label="Denmark">Denmark</option>
@@ -279,7 +286,7 @@ const IcanSignup = () => {
               <option value="ES" label="Spain">Spain</option>
               <option value="SJ" label="Svalbard and Jan Mayen">Svalbard and Jan Mayen</option>
               <option value="SE" label="Sweden">Sweden</option>
-<option value="CH" label="Switzerland">Switzerland</option>
+              <option value="CH" label="Switzerland">Switzerland</option>
               <option value="UA" label="Ukraine">Ukraine</option>
               <option value="SU" label="Union of Soviet Socialist Republics">Union of Soviet Socialist Republics</option>
               <option value="GB" label="United Kingdom">United Kingdom</option>
@@ -317,7 +324,7 @@ const IcanSignup = () => {
               <option value="GS" label="South Georgia and the South Sandwich Islands">South Georgia and the South Sandwich Islands</option>
               <option value="TK" label="Tokelau">Tokelau</option>
               <option value="TO" label="Tonga">Tonga</option>
-<option value="TV" label="Tuvalu">Tuvalu</option>
+              <option value="TV" label="Tuvalu">Tuvalu</option>
               <option value="UM" label="U.S. Minor Outlying Islands">U.S. Minor Outlying Islands</option>
               <option value="VU" label="Vanuatu">Vanuatu</option>
               <option value="WF" label="Wallis and Futuna">Wallis and Futuna</option>
@@ -334,10 +341,10 @@ const IcanSignup = () => {
           </div>
         </div>
         <div className='submit-container'>
-          <button className='submit' type='submit' >CONTINUE</button>
+          <button className='submit' type='submit' onClick={handleSignup} >CONTINUE</button>
           <p>{response}</p>
           <div className='underline'>
-          <p className='txt1'>Or</p>
+            <p className='txt1'>Or</p>
           </div>
           <div className={action === "JOIN AS A GUEST" ? "submit gray" : "submit"} onClick={() => { setAction("CONTINUE") }}>JOIN AS A GUEST</div>
         </div>

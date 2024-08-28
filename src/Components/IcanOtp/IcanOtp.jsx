@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import OtpInput from 'react-otp-input'
-import { useNavigate} from 'react-router-dom'
+import {AuthContext} from '../authContext/authContext'
 
 import './IcanOtp.css'
 
 const Otp = () => {
-    const navigate = useNavigate();
     const [otp, setOtp,] = useState('');
+    const {authData} = useContext(AuthContext);
 
     const fetchOtp = async () =>{
         const generatedOtp = " ";
@@ -22,34 +22,32 @@ const Otp = () => {
         console.log('OTP is', otp)
     }
 
-    const sendTokenToBackend = async (token) => {
+    const handleOtpVertification = async () => {
+        if (!authData || !authData.token) {
+            console.error('User token not found!');
+            return;
+        }
+
         try {
             const response = await fetch('https://api.yourbackend.com/verify-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
+                    'Authorization': `Bearer ${authData.token}`,
                 },
                 body: JSON.stringify({ otp }),
             });
 
             if (response.ok) {
                 const data = await response.json();
-                console.log('Token successfully sent to the backend:', data);
+                console.log('Otp vertification succesful:', data);
             } else {
-                console.error('Failed to send token:', response.statusText);
+                console.error('Otp vertification failed', response.statusText);
             }
         } catch (error) {
-            console.error('Error sending token to backend:', error);
+            console.error('Error during OTP vertification:', error);
         }
     };
-
-    const signIn = async () => {
-        const userToken = "example.jwt.token";
-        localStorage.setItem("userToken", userToken);
-        await sendTokenToBackend(userToken);
-        navigate('/Signin');
-      };
 
     return (
         <div className="App">
@@ -58,7 +56,7 @@ const Otp = () => {
             <p id="text">Kindly get OTP on the email to verify your account and log in.</p>
             <OtpInput
                 value={otp}
-                onChange={setOtp}
+                onChange={(e) => setOtp(e.target.value)}
                 numInputs={4}
                 renderSeparator={<span> </span>}
                 inputType="tel"
@@ -72,7 +70,7 @@ const Otp = () => {
             </div>
             <div className='btn-otp-container'>
                 <button type='submit' className='btn-otp gray' onClick={getOtpFromLocalStorage}>RE-SEND VERTIFICATION LINK</button>
-                <button type='submit' className='btn-otp' onClick={() => {signIn(); fetchOtp()}}>VERIFY </button>
+                <button type='submit' className='btn-otp' onClick={handleOtpVertification}>VERIFY </button>
             </div>
         </div>
     );
