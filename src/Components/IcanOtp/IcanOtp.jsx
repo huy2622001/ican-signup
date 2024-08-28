@@ -20,7 +20,7 @@ const Otp = () => {
 
     const sendTokenToBackend = async (token) => {
         try {
-            const response = await fetch('https://api.yourbackend.com/verify-otp', {
+            const response = await fetch('http://localhost:3001/verify-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
