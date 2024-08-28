@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../authContext/authContext'
 
 import './IcanSignup.css'
 
@@ -15,30 +14,32 @@ const IcanSignup = () => {
 
   const navigate = useNavigate();
 
-  const { setAuthData } = useContext(AuthContext);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phonenumber, setPhoneNumber] = useState('');
   const [country, setCountry] = useState('');
   const [gender, setGender] = useState('');
   const [dateofbirth, setDateofBirth] = useState('');
-  const [response, setResponse] = useState('');
+
+  const [, setSignupResponse] = useState(null);
 
   const handleSignup = async () => {
     try {
-      const response = await fetch('http://localhost:3001/sign-up', {
+      const response = await fetch('http://localhost:3001/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username: 'example', password: 'password' }),
+        body: JSON.stringify({ email: 'email', password: 'password', phonenumber: 'phonenumber', country: 'country',
+          gender: 'gender', dateofbirth: 'dateofbirth'
+         }),
       });
 
       if (response.ok) {
         const data = await response.json();
-        setAuthData(data);
-        navigate('/Otp');
+        setSignupResponse(data);
+        localStorage.setItem('userToken', data.token);
+        navigate('/otp');
       } else {
         console.error('Signup failed:', response.statusText);
       }
@@ -47,10 +48,9 @@ const IcanSignup = () => {
     }
   };
 
-
   return (
     <div className='container'>
-      <form className='header'>
+      <form className='header' onSubmit={handleSignup}>
         <div className='int1'>
           <img src={yellow_splash} alt="" className='splash' />
         </div>
@@ -341,8 +341,7 @@ const IcanSignup = () => {
           </div>
         </div>
         <div className='submit-container'>
-          <button className='submit' type='submit' onClick={handleSignup} >CONTINUE</button>
-          <p>{response}</p>
+          <button className='submit' type='submit' onClick={handleSignup}>CONTINUE</button>
           <div className='underline'>
             <p className='txt1'>Or</p>
           </div>
