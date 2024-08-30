@@ -25,7 +25,7 @@ const IcanSignup = () => {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch('http://localhost:3001/signup', {
+      const response = await fetch('http://192.168.1.20:3001/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,6 @@ const IcanSignup = () => {
         const data = await response.json();
         setSignupResponse(data);
         localStorage.setItem('userToken', data.token);
-        navigate('/otp');
       } else {
         console.error('Signup failed:', response.statusText);
       }
@@ -341,7 +340,7 @@ const IcanSignup = () => {
           </div>
         </div>
         <div className='submit-container'>
-          <button className='submit' type='submit' onClick={handleSignup}>CONTINUE</button>
+          <button className='submit' type='submit' onClick={() => navigate('/otp')}>CONTINUE</button>
           <div className='underline'>
             <p className='txt1'>Or</p>
           </div>

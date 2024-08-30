@@ -17,7 +17,7 @@ const IcanSignin = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch('http://localhost:3001/sign-in', {
+    fetch('http://192.168.1.20:3001/sign-in', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

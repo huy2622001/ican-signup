@@ -16,11 +16,12 @@ const Otp = () => {
         } else {
             console.error('User token not found!');
         }
+        navigate('/Signin');
     };
 
     const sendTokenToBackend = async (token) => {
         try {
-            const response = await fetch('http://localhost:3001/verify-otp', {
+            const response = await fetch('http://192.168.1.20:3001/verify-otp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -32,7 +33,6 @@ const Otp = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Token successfully sent to the backend:', data);
-                navigate('/Signin');
             } else {
                 console.error('Failed to send token', response.statusText);
             }
