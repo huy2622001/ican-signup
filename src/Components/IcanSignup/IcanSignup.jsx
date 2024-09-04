@@ -23,15 +23,21 @@ const IcanSignup = () => {
 
   const [, setSignupResponse] = useState(null);
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
     try {
-      const response = await fetch('http://192.168.1.20:3001/signup', {
+      const response = await fetch('http://192.168.1.20:3001/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: 'email', password: 'password', phonenumber: 'phonenumber', country: 'country',
-          gender: 'gender', dateofbirth: 'dateofbirth'
+        body: JSON.stringify({
+          email, 
+          password, 
+          phonenumber, 
+          country,
+          gender, 
+          dateofbirth 
          }),
       });
 
@@ -39,6 +45,7 @@ const IcanSignup = () => {
         const data = await response.json();
         setSignupResponse(data);
         localStorage.setItem('userToken', data.token);
+        navigate('/otp');
       } else {
         console.error('Signup failed:', response.statusText);
       }
@@ -340,7 +347,7 @@ const IcanSignup = () => {
           </div>
         </div>
         <div className='submit-container'>
-          <button className='submit' type='submit' onClick={() => navigate('/otp')}>CONTINUE</button>
+          <button className='submit' type='submit'>CONTINUE</button>
           <div className='underline'>
             <p className='txt1'>Or</p>
           </div>
