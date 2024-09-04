@@ -5,6 +5,7 @@ import './IcanSignup.css'
 
 import yellow_splash from '../Assets/yello splash 1.png'
 import purple_brush from '../Assets/purple brush 1.png'
+import config from '../../config/config'
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></link>
 
@@ -26,7 +27,7 @@ const IcanSignup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://192.168.1.20:3001/sign-up', {
+      const response = await fetch(`${config.apiBaseUrl}/sign-up`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
