@@ -1,51 +1,43 @@
 import React, { useState } from "react";
-import OtpInput from 'react-otp-input'
-import {useNavigate} from 'react-router-dom'
+import OtpInput from 'react-otp-input';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import './IcanOtp.css'
+import './IcanOtp.css';
+import config from "../../config/config";
 
 const Otp = () => {
-    const [otp, setOtp,] = useState('');
+    const [otp, setOtp] = useState('');
+    const [error, setError] = useState('');
+    const location = useLocation();
+    const userId = Number(location.state.userId);
     const navigate = useNavigate();
+    const handleOtpVerification = async (e) => {
+        e.preventDefault();
 
-    const handleOtpVerification = async () => {
-        const userToken = localStorage.getItem('userToken');
-
-        if (userToken) {
-            await sendTokenToBackend(userToken);
-        } else {
-            console.error('User token not found!');
-        }
-        navigate('/Signin');
-    };
-
-    const sendTokenToBackend = async (token) => {
         try {
-            const response = await fetch('http://192.168.1.20:3001/verify-otp', {
+            const response = await fetch(`${config.apiBaseUrl}/sign-up/verify-otp`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({ otp }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: userId, otp }),
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log('Token successfully sent to the backend:', data);
+                navigate('/sign-in');
             } else {
-                console.error('Failed to send token', response.statusText);
+                const result = await response.json();
+                setError(result.message || 'Failed to verify OTP');
             }
         } catch (error) {
-            console.error('Error sending token to backend:', error);
+            console.error('Error verifying OTP:', error);
+            setError('An unexpected error occurred. Please try again.');
         }
     };
 
     return (
         <div className="App">
             <h2 className="word1">VERIFY YOUR ACCOUNT</h2>
-            <p id="text">We've sent a vertification email to j******@email.com</p>
-            <p id="text">Kindly get OTP on the email to verify your account and log in.</p>
+            <p id="text">We've sent a verification email to j******@email.com</p>
+            <p id="text">Kindly get OTP from the email to verify your account and log in.</p>
             <OtpInput
                 value={otp}
                 onChange={setOtp}
@@ -56,15 +48,17 @@ const Otp = () => {
                 inputStyle={{ width: "3rem", height: "3.5rem" }}
                 renderInput={(props) => <input {...props} className='otp-input' />}
             />
+            {error && <p className="error-message">{error}</p>}  {/* Display error message if any */}
             <div className="word">
                 <p id="text">Didn’t receive a link? If you’ve already checked your spam folder, you can request to
                     resend the link here after 10 minutes.</p>
             </div>
             <div className='btn-otp-container'>
-                <button type='submit' className='btn-otp gray'>RE-SEND VERTIFICATION LINK</button>
-                <button type='submit' className='btn-otp' onClick={handleOtpVerification}>VERIFY </button>
+                <button type='button' className='btn-otp gray'>RE-SEND VERIFICATION LINK</button>
+                <button type='button' className='btn-otp' onClick={handleOtpVerification}>VERIFY</button>
             </div>
         </div>
     );
 };
+
 export default Otp;

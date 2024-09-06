@@ -22,7 +22,7 @@ const IcanSignup = () => {
   const [gender, setGender] = useState('');
   const [dateofbirth, setDateofBirth] = useState('');
 
-  const [, setSignupResponse] = useState(null);
+  //const [, setSignupResponse] = useState(null);
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -41,13 +41,11 @@ const IcanSignup = () => {
           dateofbirth 
          }),
       });
-
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        setSignupResponse(data);
-        localStorage.setItem('userToken', data.token);
-        navigate('/otp');
+        navigate('/otp', { state: { userId: data.userId } });
       } else {
+        //setError('Signup failed: ' + (data.message || response.statusText));
         console.error('Signup failed:', response.statusText);
       }
     } catch (error) {

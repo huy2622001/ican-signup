@@ -5,6 +5,7 @@ import './IcanSignin.css'
 
 import yellow_splash from '../Assets/yello splash 1.png'
 import purple_brush from '../Assets/purple brush 1.png'
+import config from '../../config/config'
 
 const IcanSignin = () => {
 
@@ -17,7 +18,7 @@ const IcanSignin = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    fetch('http://192.168.1.20:3001/sign-in', {
+    fetch(`${config.apiBaseUrl}/sign-in`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
